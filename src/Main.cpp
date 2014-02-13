@@ -67,8 +67,8 @@ int main(int argc, char** argv) {
 
 // main function of verifyBamID
 int execute(int argc, char** argv) {
-  printf("verifyBamID 1.0.0 -- verify identity and purity of sequence data\n"
-	 "(c) 2010 Hyun Min Kang, Goo Jun, and Goncalo Abecasis\n\n");
+  printf("verifyBamID %s -- verify identity and purity of sequence data\n"
+	 "(c) 2010-2014 Hyun Min Kang, Goo Jun, and Goncalo Abecasis\n\n", VERSION);
 
   VerifyBamIDArgs args;
   ParameterList pl;
