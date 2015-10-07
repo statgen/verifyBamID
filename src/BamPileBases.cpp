@@ -113,7 +113,12 @@ int BamPileBases::readMarker(const char* chrom, int position, bool ignoreOverlap
   if (mSN2RefID.find(searchChrom) == mSN2RefID.end())
   {
       // if refID is not found in SN, provide warning
-      Logger::gLogger->warning("Cannot find sequence name %s appeared in VCF file but not in the BAM file, perhaps the reference is incompatible?\nThese markers will be ignored..", chrom);
+      std::pair<std::set<std::string>::iterator,bool> ret;
+      ret = mSN2warn.insert(chrom);
+      if(ret.second == true)
+      {  // New entry, so warn.
+          Logger::gLogger->warning("Cannot find sequence name %s appeared in VCF file but not in the BAM file, perhaps the reference is incompatible?\nThese markers will be ignored..", chrom);
+      }
       nEnds.push_back(cBases.size());
   }
   else {

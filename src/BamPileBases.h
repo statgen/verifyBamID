@@ -2,6 +2,7 @@
 #define __BAM_PILE_BASES__H
 
 #include <map>
+#include <set>
 #include <vector>
 #include <string>
 #include "Generic.h"
@@ -48,6 +49,7 @@ class BamPileBases {
 private:
   // chr string to refID map (chr string without any leading "chr")
   std::map<std::string,int> mSN2RefID;
+  std::set<std::string> mSN2warn;
 };
 
 #endif
