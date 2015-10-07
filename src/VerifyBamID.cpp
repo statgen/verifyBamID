@@ -267,6 +267,10 @@ void VerifyBamID::loadFiles(const char* bamFile, const char* vcfFile) {
 
   const char* smID = pArgs->sSMID.IsEmpty() ? NULL : pArgs->sSMID.c_str();
 
+  if ( pArgs->bNoEOF ) {
+    BgzfFileType::setRequireEofBlock(false);
+  }
+
   pPile = new BamPileBases(bamFile, smID, pArgs->bIgnoreRG);
   pPile->minMapQ = pArgs->minMapQ;
   pPile->maxDepth = pArgs->maxDepth;
@@ -275,10 +279,6 @@ void VerifyBamID::loadFiles(const char* bamFile, const char* vcfFile) {
   pPile->includeSamFlag = pArgs->includeSamFlag;
   pPile->excludeSamFlag = pArgs->excludeSamFlag;
   //pPile->bIgnoreRG = pArgs->bIgnoreRG;
-
-  if ( pArgs->bNoEOF ) {
-    BgzfFileType::setRequireEofBlock(false);
-  }
 
   // set # of readGroups when loading BAMs
   nRGs = (int)pPile->vsRGIDs.size();
