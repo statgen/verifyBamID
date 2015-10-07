@@ -44,7 +44,9 @@ class BamPileBases {
   // sample ID of the BAM (if only one)
   std::string sBamSMID;
   bool bSameSMFlag;
-  // chr to refID map
+
+private:
+  // chr string to refID map (chr string without any leading "chr")
   std::map<std::string,int> mSN2RefID;
 };
 

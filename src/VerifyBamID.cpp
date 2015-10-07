@@ -64,7 +64,7 @@ GenMatrixBinary::GenMatrixBinary(const char* vcfFile, bool siteOnly, std::vector
     pMarker = vcf.getLastMarker();
 
     // Non-autosomal chromosomes must be discarded
-    if ( atoi(pMarker->sChrom.c_str()) == 0 ) {
+    if ( !VcfHelper::isAutosome(pMarker->sChrom.c_str()) ) {
         if(++numNonAutoWarn <= 5)
         {
             Logger::gLogger->warning("Skipping no-autosomal marker %s:%d",pMarker->sChrom.c_str(),pMarker->nPos);
