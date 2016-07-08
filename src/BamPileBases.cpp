@@ -4,7 +4,7 @@
 #include <set>
 
 // construct BamPileBases object from bamFile
-BamPileBases::BamPileBases(const char* bamFile, const char* smID, bool ignoreRG) : bIgnoreRG(ignoreRG) {
+BamPileBases::BamPileBases(const char* bamFile, const char* smID, bool ignoreRG, const char* baiFile) : bIgnoreRG(ignoreRG) {
   // open BAM File
   if ( ! inBam.OpenForRead( bamFile )  ) {
     Logger::gLogger->error("Cannot open BAM file %s for reading - %s", bamFile, SamStatus::getStatusString(inBam.GetStatus()) );
@@ -14,15 +14,23 @@ BamPileBases::BamPileBases(const char* bamFile, const char* smID, bool ignoreRG)
   
   // set index name as *.bam.bai"
   std::string sIndexFile = bamFile;
-  sIndexFile += ".bai";
-  
+
+  if(baiFile != NULL)
+  {
+      sIndexFile = baiFile;
+  }
+  else
+  {
+      sIndexFile += ".bai";
+  }
+
   // read index file
   FILE* fp = fopen(sIndexFile.c_str(),"rb");
   if ( fp != NULL ) {
     fclose(fp);
     inBam.ReadBamIndex( sIndexFile.c_str() );
   }
-  else {
+  else if(baiFile == NULL) {
     // if index does not exist, set index name as *.bai and try again
     sIndexFile = bamFile;
     sIndexFile[sIndexFile.size()-1] = 'i';

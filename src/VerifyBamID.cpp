@@ -261,7 +261,7 @@ void VerifyBamID::loadSubsetInds(const char* subsetFile) {
   }
 }
 
-void VerifyBamID::loadFiles(const char* bamFile, const char* vcfFile) {
+void VerifyBamID::loadFiles(const char* bamFile, const char* vcfFile, const char* baiFile) {
   // create a pile object
   Logger::gLogger->writeLog("Opening BAM file %s",bamFile);
 
@@ -271,7 +271,7 @@ void VerifyBamID::loadFiles(const char* bamFile, const char* vcfFile) {
     BgzfFileType::setRequireEofBlock(false);
   }
 
-  pPile = new BamPileBases(bamFile, smID, pArgs->bIgnoreRG);
+  pPile = new BamPileBases(bamFile, smID, pArgs->bIgnoreRG, baiFile);
   pPile->minMapQ = pArgs->minMapQ;
   pPile->maxDepth = pArgs->maxDepth;
   pPile->minQ = pArgs->minQ;

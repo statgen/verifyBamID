@@ -12,7 +12,7 @@
 class BamPileBases {
  public:
   // constructor
-  BamPileBases(const char* bamFile, const char* smID = NULL, bool ignoreRG = false);
+    BamPileBases(const char* bamFile, const char* smID = NULL, bool ignoreRG = false, const char* baiFile = NULL);
 
   // read a markers
   int readMarker(const char* chrom, int position, bool ignoreOverlapPair = false);

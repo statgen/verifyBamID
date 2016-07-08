@@ -76,6 +76,7 @@ int execute(int argc, char** argv) {
     LONG_PARAMETER_GROUP("Input Files")
     LONG_STRINGPARAMETER("vcf",&args.sVcfFile)
     LONG_STRINGPARAMETER("bam",&args.sBamFile)
+    LONG_STRINGPARAMETER("bai",&args.sBaiFile)
     LONG_STRINGPARAMETER("subset",&args.sSubsetInds)
     LONG_STRINGPARAMETER("smID",&args.sSMID)
 
@@ -164,7 +165,14 @@ int execute(int argc, char** argv) {
 
   // load input VCF and BAM files
   Logger::gLogger->writeLog("Opening Input Files");
-  vbid.loadFiles(args.sBamFile.c_str(), args.sVcfFile.c_str());
+  if ( args.sBaiFile.IsEmpty() ) {
+      vbid.loadFiles(args.sBamFile.c_str(), args.sVcfFile.c_str());
+  }
+  else
+  {
+      vbid.loadFiles(args.sBamFile.c_str(), args.sVcfFile.c_str(), 
+                     args.sBaiFile.c_str());
+  }
 
   // Check which genotype-free method is used
   if ( args.bFreeNone ) {  // if no genotype-free mode is tested. skip it

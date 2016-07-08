@@ -155,7 +155,7 @@ class VerifyBamID {
   }
 
   void loadSubsetInds(const char* subsetFile);
-  void loadFiles(const char* bamFile, const char* vcfFile);
+  void loadFiles(const char* bamFile, const char* vcfFile, const char* baiFile = NULL);
 
   //double mleMixLLKs(double minMix = 0, double maxMix = 0.5, double tol = 1e-4, int maxIter = 100);
   //double mleIBDLLKs(double minIBD = 0, double maxIBD = 1, double tol = 1e-4, int maxIter = 100);

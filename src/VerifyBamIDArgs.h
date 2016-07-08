@@ -7,6 +7,7 @@ public:
   String sSubsetInds;
   String sVcfFile;
   String sBamFile;
+  String sBaiFile;
   String sOutFile;
   String sSMID;
 
