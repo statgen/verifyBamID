@@ -54,6 +54,8 @@ GenMatrixBinary::GenMatrixBinary(const char* vcfFile, bool siteOnly, std::vector
   }
 
   int numNonAutoWarn = 0;
+  int afWarn = 0;
+  int callRateWarn = 0;
   // read each marker and stores genotype
   while( vcf.iterateMarker() ) {
     // set per-marker level information
@@ -139,9 +141,21 @@ GenMatrixBinary::GenMatrixBinary(const char* vcfFile, bool siteOnly, std::vector
 
     // skip by AF or callRate 
     if ( AF < minAF ) 
-      continue;
+    {
+        if(++afWarn < 5)
+        {
+            Logger::gLogger->warning("Skipping marker where AF (%lf) is < minAF (%lf)", AF, minAF);
+        }
+        continue;
+    }
     if ( callRate < minCallRate ) 
-      continue;
+    {
+        if(++callRateWarn < 5)
+        {
+            Logger::gLogger->warning("Skipping marker where callRate (%lf) is < minCallRate (%lf)", callRate, minCallRate);
+        }
+        continue;
+    }
 
     // skip non-bi-allelic marker
     if ( pMarker->asAlts.Length() > 1 ) {
@@ -165,6 +179,14 @@ GenMatrixBinary::GenMatrixBinary(const char* vcfFile, bool siteOnly, std::vector
 
   Logger::gLogger->writeLog("Finished reading %d markers from VCF file",vcf.nNumMarkers);
   Logger::gLogger->writeLog("Total of %d informative markers passed after AF >= %lf and callRate >= %lf threshold",(int)chroms.size(),minAF,minCallRate);
+  if(afWarn > 0)
+  {
+      Logger::gLogger->warning("Skipped %d markers where AF was less than minAF (%lf)",afWarn,minAF);
+  }
+  if(callRateWarn > 0)
+  {
+      Logger::gLogger->warning("Skipped %d markers where callRate was less than minCallRate (%lf)",callRateWarn,minCallRate);
+  }
 
   if ( chroms.size() == 0 ) {
     Logger::gLogger->error("No informative markers were found. Does the VCF have individual genotypes or either AF entry or AC & AN entries included in the INFO field?");
