@@ -691,19 +691,21 @@ void VerifyBamID::calculateDepthDistribution(int maxDepth, VerifyBamOut &vbo) {
 
 void VerifyBamID::printPerMarkerInfo(const char* filename, int indIdx) {
   IFILE oFile = ifopen(filename,"wb");
+  Logger::gLogger->warning("Writing id file");
   int nMarkers = (int)(pGenotypes->chroms.size());
+
   char base, a1, a2;
 
-  ifprintf(oFile,"#CHROM\tPOS\tA1\tA2\tAF\tGENO\t#REF\t#ALT\t#OTHERS\tBASES\tQUALS\tMAPQS\n");
+  ifprintf(oFile,"#CHROM\tPOS\tA1\tA2\tAF\t#REF\t#ALT\t#OTHERS\tBASES\tQUALS\tMAPQS\n");
+
   for(int i=0; i < nMarkers; ++i) {
     int counts[3] = {0,0,0};
     std::vector<char> bases;
     std::vector<char> quals;
     std::vector<char> mqs;
 
-    ifprintf(oFile,"%s\t%d\t%c\t%c\t%.4lf\t",pGenotypes->chroms[i].c_str(),pGenotypes->positions[i],pGenotypes->refBases[i],pGenotypes->altBases[i],pGenotypes->alleleFrequencies[i]);
-    int geno = pGenotypes->getGenotype(indIdx,i);
-    switch(geno) {
+
+    /*switch(geno) {
     case 0: // MISSING
       ifprintf(oFile,"./.");
       break;
@@ -718,11 +720,11 @@ void VerifyBamID::printPerMarkerInfo(const char* filename, int indIdx) {
       break;
     default:
       Logger::gLogger->error("Unrecognized genotype %d at ind %d, marker %d",indIdx,i);
-    }
+    }*/
 
     a1 = pGenotypes->refBases[i];
     a2 = pGenotypes->altBases[i];
-
+    if ((int)pPile->nEnds[i] - (int)pPile->nBegins[i]  > 0){
     for(int j=(int)pPile->nBegins[i]; j < (int)pPile->nEnds[i]; ++j) {
       // obtain b (base), (error), and readgroup info
       base = pPile->cBases[j];
@@ -740,9 +742,11 @@ void VerifyBamID::printPerMarkerInfo(const char* filename, int indIdx) {
       quals.push_back(pPile->cQuals[j]);
       mqs.push_back(((uint8_t)(pPile->cMapQs[j]) > 90) ? '~' : static_cast<char>(pPile->cMapQs[j]+33));
     }
-    ifprintf(oFile,"\t%d\t%d\t%d\t%.3lf\t",counts[0],counts[1],counts[2],(counts[0]+counts[1] == 0) ? 0.5 : (double)counts[0]/(double)(counts[0]+counts[1]));
+    ifprintf(oFile,"%s\t%d\t%c\t%c\t%.4lf\t",pGenotypes->chroms[i].c_str(),pGenotypes->positions[i],pGenotypes->refBases[i],pGenotypes->altBases[i],pGenotypes->alleleFrequencies[i]);
 
-    ifprintf(oFile,"\t");
+    ifprintf(oFile,"%d\t%d\t%d\t%.3lf\t",counts[0],counts[1],counts[2],(counts[0]+counts[1] == 0) ? 0.5 : (double)counts[0]/(double)(counts[0]+counts[1]));
+
+    /*ifprintf(oFile,"\t");
     for(int j=0; j < (int)bases.size(); ++j)
       ifprintf(oFile,"%c",bases[j]);
 
@@ -752,8 +756,9 @@ void VerifyBamID::printPerMarkerInfo(const char* filename, int indIdx) {
 
     ifprintf(oFile,"\t");
     for(int j=0; j < (int)mqs.size(); ++j)
-      ifprintf(oFile,"%c",mqs[j]);
+      ifprintf(oFile,"%c",mqs[j]);*/
 
     ifprintf(oFile,"\n");
+    }
   }
 }
