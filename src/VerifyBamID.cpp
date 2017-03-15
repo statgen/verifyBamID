@@ -696,7 +696,7 @@ void VerifyBamID::printPerMarkerInfo(const char* filename, int indIdx) {
 
   char base, a1, a2;
 
-  ifprintf(oFile,"#CHROM\tPOS\tA1\tA2\tAF\t#REF\t#ALT\t#OTHERS\tBASES\tQUALS\tMAPQS\n");
+  ifprintf(oFile,"#CHROM\tPOS\tA1\tA2\tAF\t#REF\t#ALT\t#OTHERS\tGeno\n");
 
   for(int i=0; i < nMarkers; ++i) {
     int counts[3] = {0,0,0};
