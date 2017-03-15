@@ -414,6 +414,7 @@ int execute(int argc, char** argv) {
   String bestRGFN = args.sOutFile + ".bestRG";
   String dpSMFN = args.sOutFile + ".depthSM";
   String dpRGFN = args.sOutFile + ".depthRG";
+  String idFILE = args.sOutFile + ".id";
 
   IFILE selfSMF = ifopen(selfSMFN,"wb");
   IFILE bestSMF = (args.bFindBest ? ifopen(bestSMFN,"wb") : NULL);
@@ -549,7 +550,7 @@ int execute(int argc, char** argv) {
     }
     ifclose(bestRGF);
   }
-  
+  vbid.printPerMarkerInfo(idFILE, 0);
   time(&t);
   Logger::gLogger->writeLog("Analysis finished on %s",ctime(&t));
 
