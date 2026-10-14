@@ -191,12 +191,12 @@ int BamPileBases::readMarker(const char* chrom, int position, bool ignoreOverlap
 
 	if ( offset >= 0 ) {
 	  int32_t readIndex = cigarRoller.getQueryIndex(offset);
-	  bool unique = ignoreOverlapPair ? true : readNames.insert(samRecord.getReadName()).second;
-	  //if ( !unique ) 
-	  //  error("foo -- detected overlapping paired end read for %s\n",samRecord.getReadName());
-
-	  if ( unique && ( readIndex != CigarRoller::INDEX_NA ) ) {
-	    if ( ( static_cast<int>(readQuality[readIndex]) >= minQ + 33 ) && ( readSequence[readIndex] != 'N' ) ) {
+	  if ( ( readIndex != CigarRoller::INDEX_NA ) &&
+	       ( static_cast<int>(readQuality[readIndex]) >= minQ + 33 ) &&
+	       ( readSequence[readIndex] != 'N' ) ) {
+	    // A rejected observation must not suppress a usable overlapping mate.
+	    bool unique = ignoreOverlapPair ? true : readNames.insert(samRecord.getReadName()).second;
+	    if ( unique ) {
 	      nRGIndices.push_back(rgIdx);
 	      cBases.push_back(readSequence[readIndex]);
 	      cQuals.push_back(readQuality[readIndex]);
